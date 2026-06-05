@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GREEN-API Client</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">GREEN<em>API</em> Client</span>
+      </div>
+      <div class="status-bar">
+        <span class="status-dot" id="statusDot"></span>
+        <span class="status-label" id="statusLabel">Нет соединения</span>
+      </div>
+    </header>
+
+    <main class="app-body">
+
+      <!-- LEFT COLUMN -->
+      <section class="panel panel-left">
+
+        <!-- Connection Block -->
+        <div class="block" id="blockConnect">
+          <div class="block-title">
+            <span class="block-num">01</span>
+            Подключение
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="idInstance">idInstance</label>
+            <input
+              class="field-input"
+              id="idInstance"
+              type="text"
+              placeholder="1101000001"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="apiTokenInstance">apiTokenInstance</label>
+            <input
+              class="field-input"
+              id="apiTokenInstance"
+              type="text"
+              placeholder="d75b3a66374942c5b3c6b6..."
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+          <div class="btn-row">
+            <button class="btn" id="btnGetSettings" data-label="getSettings">
+              <span class="btn-method">GET</span>
+              getSettings
+            </button>
+            <button class="btn" id="btnGetStateInstance" data-label="getStateInstance">
+              <span class="btn-method">GET</span>
+              getStateInstance
+            </button>
+          </div>
+        </div>
+
+        <!-- sendMessage Block -->
+        <div class="block" id="blockSendMessage">
+          <div class="block-title">
+            <span class="block-num">02</span>
+            sendMessage
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="phoneMessage">Телефон</label>
+            <input
+              class="field-input"
+              id="phoneMessage"
+              type="tel"
+              placeholder="77071012145"
+              autocomplete="off"
+            />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="messageText">Текст сообщения</label>
+            <textarea
+              class="field-input field-textarea"
+              id="messageText"
+              placeholder="Hello World!"
+              rows="3"
+            ></textarea>
+          </div>
+          <button class="btn btn-accent" id="btnSendMessage" data-label="sendMessage">
+            <span class="btn-method">POST</span>
+            sendMessage
+          </button>
+        </div>
+
+        <!-- sendFileByUrl Block -->
+        <div class="block" id="blockSendFile">
+          <div class="block-title">
+            <span class="block-num">03</span>
+            sendFileByUrl
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="phoneFile">Телефон</label>
+            <input
+              class="field-input"
+              id="phoneFile"
+              type="tel"
+              placeholder="77071012145"
+              autocomplete="off"
+            />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="fileUrl">URL файла</label>
+            <input
+              class="field-input"
+              id="fileUrl"
+              type="url"
+              placeholder="https://my.site.com/img/photo.jpg"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+          <button class="btn btn-accent" id="btnSendFileByUrl" data-label="sendFileByUrl">
+            <span class="btn-method">POST</span>
+            sendFileByUrl
+          </button>
+        </div>
+
+      </section>
+
+      <!-- RIGHT COLUMN -->
+      <section class="panel panel-right">
+        <div class="output-header">
+          <span class="output-title">Ответ</span>
+          <button class="btn-clear" id="btnClear" title="Очистить">✕</button>
+        </div>
+        <textarea
+          class="output-area"
+          id="outputArea"
+          readonly
+          placeholder="Здесь появятся результаты запросов..."
+        ></textarea>
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
