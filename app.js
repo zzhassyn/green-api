@@ -114,3 +114,51 @@ function extractFileName(url) {
     return 'file';
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UI STATE MANAGEMENT
+═══════════════════════════════════════════════════════════════════════════ */
+function setButtonLoading(btn, loading) {
+  const originalLabel = btn.dataset.label;
+
+  if (loading) {
+    btn.disabled = true;
+    btn.classList.add('is-loading');
+    const badge = btn.querySelector('.btn-method');
+    const badgeHtml = badge ? badge.outerHTML : '';
+    btn.innerHTML = `${badgeHtml}<span class="btn-label">Loading</span>`;
+  } else {
+    btn.disabled = false;
+    btn.classList.remove('is-loading');
+    const badge = btn.querySelector('.btn-method');
+    const badgeHtml = badge ? badge.outerHTML : '';
+    btn.innerHTML = `${badgeHtml}${originalLabel}`;
+  }
+}
+
+function showResult(data, isError = false) {
+  const serializable = typeof data === 'object'
+    ? (({ __isApiError, ...rest }) => rest)(data)
+    : data;
+
+  dom.outputArea.value = JSON.stringify(serializable, null, 2);
+  dom.outputArea.classList.toggle('is-error', isError);
+}
+
+function setStatus(state) {
+  const dot   = dom.statusDot;
+  const label = dom.statusLabel;
+
+  dot.className = 'status-dot';
+
+  if (state === 'active') {
+    dot.classList.add('active');
+    label.textContent = 'Подключено';
+  } else if (state === 'error') {
+    dot.classList.add('error');
+    label.textContent = 'Ошибка';
+  } else {
+    label.textContent = 'Нет соединения';
+  }
+}
+
