@@ -162,3 +162,81 @@ function setStatus(state) {
   }
 }
 
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BUSINESS LOGIC — OPERATION HANDLERS
+═══════════════════════════════════════════════════════════════════════════ */
+async function executeOperation(btn, fn) {
+  try {
+    validateCredentials();
+  } catch (err) {
+    showResult(err, true);
+    setStatus('error');
+    return;
+  }
+
+  setButtonLoading(btn, true);
+
+  try {
+    const data = await fn();
+    showResult(data, false);
+    setStatus('active');
+  } catch (err) {
+    showResult(err, true);
+    setStatus('error');
+  } finally {
+    setButtonLoading(btn, false);
+  }
+}
+
+async function handleGetSettings() {
+  await executeOperation(dom.btnGetSettings, () => apiRequest('getSettings', 'GET'));
+}
+
+async function handleGetStateInstance() {
+  await executeOperation(dom.btnGetStateInstance, () => apiRequest('getStateInstance', 'GET'));
+}
+
+async function handleSendMessage() {
+  await executeOperation(dom.btnSendMessage, () => {
+    const chatId  = sanitizePhone(dom.phoneMessage.value);
+    const message = dom.messageText.value.trim();
+
+    if (!message) {
+      throw buildError('Поле «Текст сообщения» не заполнено.');
+    }
+
+    return apiRequest('sendMessage', 'POST', { chatId, message });
+  });
+}
+
+async function handleSendFileByUrl() {
+  await executeOperation(dom.btnSendFileByUrl, () => {
+    const chatId  = sanitizePhone(dom.phoneFile.value);
+    const urlRaw  = dom.fileUrl.value.trim();
+
+    validateUrl(urlRaw);
+
+    return apiRequest('sendFileByUrl', 'POST', {
+      chatId,
+      urlFile:  urlRaw,
+      fileName: extractFileName(urlRaw),
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INIT — WIRE UP EVENT LISTENERS
+═══════════════════════════════════════════════════════════════════════════ */
+(function init() {
+  dom.btnGetSettings.addEventListener('click', handleGetSettings);
+  dom.btnGetStateInstance.addEventListener('click', handleGetStateInstance);
+  dom.btnSendMessage.addEventListener('click', handleSendMessage);
+  dom.btnSendFileByUrl.addEventListener('click', handleSendFileByUrl);
+
+  dom.btnClear.addEventListener('click', () => {
+    dom.outputArea.value = '';
+    dom.outputArea.classList.remove('is-error');
+    setStatus('idle');
+  });
+})();
