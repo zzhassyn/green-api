@@ -79,3 +79,38 @@ function buildError(message, details = undefined) {
   obj.__isApiError = true;
   return obj;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   VALIDATION LAYER
+═══════════════════════════════════════════════════════════════════════════ */
+function validateCredentials() {
+  const { idInstance, apiTokenInstance } = getCredentials();
+  if (!idInstance || !apiTokenInstance) {
+    throw buildError('Не заполнены параметры подключения к GREEN-API.');
+  }
+}
+
+function sanitizePhone(phone) {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length < 10) {
+    throw buildError('Некорректный номер телефона.');
+  }
+  return `${digits}@c.us`;
+}
+
+function validateUrl(url) {
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    throw buildError('Некорректный URL файла.');
+  }
+}
+
+function extractFileName(url) {
+  try {
+    const pathname = new URL(url).pathname;
+    const parts    = pathname.split('/').filter(Boolean);
+    const last     = parts[parts.length - 1] || '';
+    return last || 'file';
+  } catch {
+    return 'file';
+  }
+}
